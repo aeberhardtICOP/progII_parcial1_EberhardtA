@@ -1,6 +1,6 @@
 package resol;
 import java.util.Scanner;
-public class Vehiculo {
+public abstract class Vehiculo {
 	private String marca;
 	private int año;
 	private int nro_motor;
@@ -40,7 +40,10 @@ public class Vehiculo {
 		System.out.println("Ingrese matricula");
 		this.potenciaCV=scanner.nextInt();
 	}
-//gettes && setters:
+	public void mostrar() {
+		System.out.println("MARCA: "+this.marca+", MODELO: "+this.año +" \nNRO MOTOR: "+this.nro_motor+", NRO CHASIS: "+this.nro_chasis+"\nPOTENCIA EN CV: "+this.potenciaCV+", MATRICULA: "+this.matricula);
+	}
+	//gettes && setters:
 	
 	public String getMarca() {
 		return marca;

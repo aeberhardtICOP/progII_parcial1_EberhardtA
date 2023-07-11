@@ -5,13 +5,15 @@ public class Cliente {
 	private String nombre;
 	private String apellido;
 	private String mail;
+	private String genero;
 	private int dni;
 	private String domicilio;
 	private int telefono;
-	public Cliente(String nombre, String apellido, String mail, int dni, String domicilio, int telefono) {
+	public Cliente(String nombre, String apellido, String mail, String genero, int dni, String domicilio, int telefono) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.mail = mail;
+		this.genero=genero;
 		this.dni = dni;
 		this.domicilio = domicilio;
 		this.telefono = telefono;
@@ -27,6 +29,8 @@ public class Cliente {
 		this.apellido=scanner.nextLine();
 		System.out.println("Ingrese mail");
 		this.mail=scanner.nextLine();
+		System.out.println("Ingrese genero: ");
+		this.genero=scanner.nextLine();
 		System.out.println("Ingrese dni");
 		this.dni=scanner.nextInt();
 		System.out.println("Ingrese domicilio");

@@ -15,7 +15,10 @@ public class Autobus extends Vehiculo {
 		this.nroPlazas = scanner.nextInt();
 	}
 	//getters y setters
-	
+	public void mostrar() {
+		super.mostrar();
+		System.out.println("NRO DE BUTACAS AUTOBUS: "+this.nroPlazas);
+	}
 	public int getNroPlazas() {
 		return nroPlazas;
 	}

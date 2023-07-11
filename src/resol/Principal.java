@@ -29,7 +29,11 @@ public class Principal {
 	}
 	public static void main(String[] args) {
 		Aseguradora ase = new Aseguradora();
-			while (!eleccion.equals("q"))
+		Cliente cliente = new Cliente("ale", "eberhardt", "ale@","masculino",42330346,"i fal 786",191715);
+		ase.agregarPersona(cliente);
+		Taxi taxi = new Taxi("Peugeot 304", 2000, 123, 123, "marron", 200, "ad1234",123);	
+		ase.agregarVehiculo(taxi);
+		while (!eleccion.equals("q"))
 			 {
 				mostrarMenu();	
 				switch (eleccion){
@@ -43,17 +47,15 @@ public class Principal {
 					ase.buscarPorDocumentoYMostrar();
 					break;
 				case "4":
-					
-					
+					ase.registrarVehiculo();
 					break;
 				case "5":
-					
+					ase.listarVehiculos();
 					break;
 				case "6":
-					
 					break;
 				case "7":
-					
+					ase.buscarVehiculoPorMatriculaYMostrar();
 					break;
 				case "8":
 					

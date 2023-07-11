@@ -15,6 +15,10 @@ Scanner scanner = new Scanner(System.in);
 		System.out.println("Ingrese nro licencia");
 		this.nroLicencia=scanner.nextInt();
 	}
+	public void mostrar() {
+		super.mostrar();
+		System.out.println("NRO LICENCIA TAXI: "+this.nroLicencia);
+	}
 	//GETTES Y SETTERS
 	public int getNroLicencia() {
 		return nroLicencia;

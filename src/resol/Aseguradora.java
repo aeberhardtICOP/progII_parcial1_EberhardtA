@@ -32,6 +32,9 @@ public class Aseguradora {
 	public void agregarPersona() {
 		clientes.add(new Cliente());
 	}
+	public void agregarPersona(Cliente cliete) {
+		clientes.add(cliete);
+	}
 //listar clientes
 	public void listarPersonas() {
 		for (int i = 0; i<clientes.size();i++) {
@@ -48,6 +51,14 @@ public class Aseguradora {
 			}
 		}
 	}
+	public int buscarPorDocumento(int dni) {
+		for(int i=0;i<clientes.size();i++) {
+			if(dni==clientes.get(i).getDni()) {
+				return i;
+			}
+		}
+		return -1;
+	}
 //registrar vehiculo
 	public void registrarVehiculo() {
 		System.out.println("Que desea registrar 1)taxi, 2)autobus");
@@ -62,8 +73,105 @@ public class Aseguradora {
 		default:
 			System.out.println("No ingreso opcion valida");
 		}
-
 	}
+	public void agregarVehiculo(Vehiculo vehiculo) {
+		vehiculos.add(vehiculo);
+	}
+//listar vehiculos
+	public void listarVehiculos() {
+		for(int i=0;i<vehiculos.size();i++) {
+			vehiculos.get(i).mostrar();
+		}
+	}
+	public void listarVehiculosPor() {
+		System.out.println("Ingrese filtro 1)tipo, 2)cobertura");
+		int opcion=scanner.nextInt();
+		switch(opcion) {
+		case 1:
+			System.out.println("Ingrese filtro: 1)TAXI, 2)AUTOBUS");
+				int o=scanner.nextInt();
+				if(o==1) {
+					for(int i=0;i<vehiculos.size();i++) {
+						if(vehiculos.get(i)instanceof Taxi){
+							vehiculos.get(i).mostrar();
+						}				
+					}
+				}else if(o==2) {
+					for(int i=0;i<vehiculos.size();i++) {
+						if(vehiculos.get(i)instanceof Autobus){
+							vehiculos.get(i).mostrar();
+						}				
+					}
+				}else {
+					System.out.println("Opcion no valida");
+				}
+			break;
+		case 2:
+			break;
+		}
+	}
+//buscar vehiculo por matricula
+	public void buscarVehiculoPorMatriculaYMostrar() {
+		System.out.println("Ingrese matricula");
+		String matricula = scanner.nextLine();
+		for(int i=0;i<clientes.size();i++) {
+			if(matricula.equals(vehiculos.get(i).getMatricula())) {
+				clientes.get(i).mostrar();
+			}
+		}
+	}
+	public int buscarVehiculoPorMatricula(String matricula) {
+		matricula = scanner.nextLine();
+		for(int i=0;i<clientes.size();i++) {
+			if(matricula.equals(vehiculos.get(i).getMatricula())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+//registrar poliza
+	public void registrarPoliza() {
+		System.out.println("Ingrese DNI de persona");
+		int dni = scanner.nextInt();
+		//System.out.println("Ingrese matricula de vehiculo:");
+		//String matri = scanner.nextLine();
+		Cliente cliente;
+		if (buscarPorDocumento(dni)==-1) {
+			System.out.println("no se encontro");
+			cliente = new Cliente();
+			clientes.add(cliente);
+			
+		}else {
+			cliente=clientes.get(buscarPorDocumento(dni));
+		}
+		System.out.println("Ingrese matricula de vehiculo:");
+		String matri = scanner.nextLine();
+		Vehiculo vehiculo;
+		int indice= buscarVehiculoPorMatricula(matri);
+		if (indice==-1) {
+			System.out.println("Que desea cargar: 1)Taxi, 2)Autobus");
+			int o=scanner.nextInt();
+			switch(o) {
+			case 1: 
+				vehiculo= new Taxi();
+				vehiculos.add(vehiculo);
+				break;
+			case 2: 
+				vehiculo=new Autobus();
+				vehiculos.add(vehiculo);
+				default:
+					System.out.println("opcion no valida, por defecto taxi.");
+					vehiculo= new Taxi();
+					vehiculos.add(vehiculo);
+			}
+		}else {
+			vehiculo=vehiculos.get(indice);
+		}
+		Poliza poliza = new Poliza(vehiculo,cliente);
+		polizas.add(poliza);
+		
+	}
+	
 //getters && setters.
 	public String getNombre() {
 		return nombre;

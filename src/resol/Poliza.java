@@ -39,7 +39,7 @@ public class Poliza {
 		}
 	}
 
-	public Poliza() {
+	public Poliza(Vehiculo vehiculo, Cliente cliente) {
 		System.out.println("NUEVA POLIZA:");
 		this.nroPoliza = nro++;
 		System.out.println("Ingrese fecha de inicio");
@@ -99,6 +99,8 @@ public class Poliza {
 		for(int i=0;i<this.cantidadCuotas;i++) {
 			this.cuotas.add(new Cuota(i+1,montoCuota,false, null, null));
 		}
+		this.vehiculo=vehiculo;
+		this.cliente=cliente;
 	}
 	//getters y setters:
 
