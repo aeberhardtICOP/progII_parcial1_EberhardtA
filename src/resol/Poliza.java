@@ -1,5 +1,6 @@
 package resol;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 public class Poliza {
 	private static int nro=1000;
@@ -14,13 +15,14 @@ public class Poliza {
 	private boolean incluyeGranizo;
 	private int montoGranizoMaximo;
 	private tipoCobertura tipoCobertura;
+	private int montoCuota;
 	private ArrayList<Cuota>cuotas;
 	
 	Scanner scanner = new Scanner(System.in);
 	
 	public Poliza(Vehiculo vehiculo, Cliente cliente, String fecha_inicio, String fecha_fin,
 			int cantidadCuotas, formaDePago formaPago, int montoTotalAsegurado, boolean incluyeGranizo,
-			int montoGranizoMaximo, resol.tipoCobertura tipoCobertura) {
+			int montoGranizoMaximo, resol.tipoCobertura tipoCobertura, int montoCuota) {
 		this.vehiculo = vehiculo;
 		this.cliente = cliente;
 		this.nroPoliza = nro++;
@@ -33,20 +35,20 @@ public class Poliza {
 		this.montoGranizoMaximo = montoGranizoMaximo;
 		this.tipoCobertura = tipoCobertura;
 		this.cuotas = new ArrayList();
-		int montoCuota =this.montoTotalAsegurado/this.cantidadCuotas;
+		this.montoCuota = montoCuota;
 		for(int i=0;i<this.cantidadCuotas;i++) {
-			this.cuotas.add(new Cuota(i+1,montoCuota,false, null, null));
+			this.cuotas.add(new Cuota(i+1,this.montoCuota,false, null, null));
 		}
 	}
 
 	public Poliza(Vehiculo vehiculo, Cliente cliente) {
 		System.out.println("NUEVA POLIZA:");
 		this.nroPoliza = nro++;
-		System.out.println("Ingrese fecha de inicio");
+		System.out.println("Ingrese fecha de inicio (formato dd/mm/yyyy)");
 		this.fecha_inicio=scanner.nextLine();
-		System.out.println("Ingrese fecha de fin");
-		this.fecha_fin=scanner.nextLine();
-		System.out.println("Ingrese cantidad de cuotas");
+		System.out.println("Ingrese fecha de fin (formato dd/mm/yyyy)");
+		String fechaFin=scanner.nextLine();
+		System.out.println("Ingrese cantidad de cuotas:");
 		this.cantidadCuotas=scanner.nextInt();
 		System.out.println("Ingrese forma de pago (1)EFECTIVO, 2)TRANSFERENCIA, 3)DEBITO");
 		int opcion = scanner.nextInt();
@@ -70,14 +72,14 @@ public class Poliza {
 		int o = scanner.nextInt();
 		if (o==1) {
 			this.incluyeGranizo=true;
+			System.out.println("Ingrese monto maximo: ");
+			this.montoGranizoMaximo=scanner.nextInt();
 		}else if (o==2) {
 			this.incluyeGranizo=false;
 		}else {
 			System.out.println("OPCION NO VALIDA, NO POR DEFECTO");
 			this.incluyeGranizo=false;
 		}
-		System.out.println("Monto maximo graniz (poner 0 si no incluye)");
-		this.montoGranizoMaximo=scanner.nextInt();
 		System.out.println("Tipo Cobertura: (1)TOTAL, 2) CONTRA TERCEROS, 3)PARCIAL");
 		opcion = scanner.nextInt();
 		switch (opcion) {
@@ -95,12 +97,55 @@ public class Poliza {
 				this.tipoCobertura=tipoCobertura.TERCEROS;
 		}
 		this.cuotas = new ArrayList();
-		int montoCuota =this.montoTotalAsegurado/this.cantidadCuotas;
+		System.out.println("Ingrese monto de cuotas: ");
+		this.montoCuota =scanner.nextInt();
 		for(int i=0;i<this.cantidadCuotas;i++) {
-			this.cuotas.add(new Cuota(i+1,montoCuota,false, null, null));
+			if(i==0) {
+				this.cuotas.add(new Cuota(i+1,this.montoCuota,false,this.fecha_inicio, null));
+			}else {
+			this.cuotas.add(new Cuota(i+1,this.montoCuota,false, null, null));
+			}
 		}
 		this.vehiculo=vehiculo;
 		this.cliente=cliente;
+	}
+	public void mostrar() {
+		System.out.println("------------------------------------------");
+		System.out.println("VEHICULO: "+this.vehiculo.getMarca()+" "+this.vehiculo.getModelo()+", MATRICULA: "+this.vehiculo.getMatricula()
+							+"\nCLIENTE: "+this.cliente.getNombre()+" "+this.cliente.getApellido()+" DNI: "+this.cliente.getDni()
+							+"\nNRO POLIZA: "+ this.nroPoliza +", FECHA DE INICIO: "+this.fecha_inicio+", FECHA DE FIN: "+this.fecha_fin
+							+"\nFORMA DE PAGO: "+this.formaPago+", MONTO TOTAL ASEGURADO: "+this.montoTotalAsegurado);
+		int cuotasPagadas=0;
+		for(int i=0;i<cuotas.size();i++) {
+			if (cuotas.get(i).isEstaPaga()==true) {
+				cuotasPagadas++;
+			}
+		}
+		System.out.println("CANTIDAD DE CUOTAS: "+this.cantidadCuotas+", CUOTAS PAGAS: "+cuotasPagadas);
+		if (this.incluyeGranizo==true) {
+			System.out.println("INCLUYE GRANIZO, MONTO MAXIMO: "+this.montoGranizoMaximo);
+		}else {
+			System.out.println("NO INCLUYE GRANIZO");
+		}
+	}
+	public void mostrarCuotas() {
+		for (int i=0;i<cuotas.size();i++) {
+			System.out.print("CUOTA N°"+(i+1)+") ");
+			cuotas.get(i).mostrar();
+		}
+		System.out.println("-------------------------------");
+	}
+	public int siguienteCuotaImpaga() {
+		for(int i=0;i<cuotas.size();i++) {
+			if(cuotas.get(i).isEstaPaga()==false) {
+				System.out.println("CUOTA A PAGAR n° "+(i+1)+" = ");
+				return i;
+			}
+		}
+		return -1;
+	}
+	public void cuotaPagada(int posicionCuota, formaDePago pago, String fecha) {
+		this.cuotas.get(posicionCuota).cuotaPaga(pago, fecha);
 	}
 	//getters y setters:
 

@@ -13,13 +13,12 @@ public class Principal {
 		System.out.println("4: Registrar vehiculo");
 		System.out.println("5: Listar todos los vehiculos");
 		System.out.println("6: Listar vehiculos por tipo y cobertura segun se especifique");
-		System.out.println("7: Cambio de seccion de un empleado de servicio");
-		System.out.println("8: Buscar vehiculo por matricula");
-		System.out.println("9: Registrar una poliza");
-		System.out.println("10: Pagar cuota");
-		System.out.println("11: Listar polizar por tipo de cobertura");
-		System.out.println("12: Buscar poliza, mostrar informacion y lista de cuotas");
-		System.out.println("13: Ver datos estadisticos.");
+		System.out.println("7: Buscar vehiculo por matricula");
+		System.out.println("8: Registrar una poliza");
+		System.out.println("9: Pagar cuota");
+		System.out.println("10: Listar polizar por tipo de cobertura");
+		System.out.println("11: Buscar poliza, mostrar informacion y lista de cuotas");
+		System.out.println("12: Ver datos estadisticos.");
 		
 		System.out.println("q: Salir");	
 		System.out.println("");
@@ -29,10 +28,28 @@ public class Principal {
 	}
 	public static void main(String[] args) {
 		Aseguradora ase = new Aseguradora();
-		Cliente cliente = new Cliente("ale", "eberhardt", "ale@","masculino",42330346,"i fal 786",191715);
+		Cliente cliente = new Cliente("Alejandro", "Eberhardt", "ale@gmail.com","Masculino",42330346,"i falchini 786",191715);
+		Cliente cliente2 = new Cliente("Lucas", "Eberhardt", "lucas@gmail.com","Masculino",47555222,"i falchini 989",123456);
 		ase.agregarPersona(cliente);
-		Taxi taxi = new Taxi("Peugeot 304", 2000, 123, 123, "marron", 200, "ad1234",123);	
+		ase.agregarPersona(cliente2);
+		Taxi taxi = new Taxi("Peugeot","304", 2000, 123, 123, "marron", 200, "ad1234",123);
+		Taxi taxi1 = new Taxi("Volkswagen","Gol", 2007, 321, 321, "Amarillo", 250, "aa3212",123);	
+		Autobus autobus = new Autobus("Mercedes","b200", 2017, 123, 123, "naranja", 500, "ab4567",54);
+		Autobus autobus1 = new Autobus("Volkswagen","d800", 2010, 321, 321, "Azul", 380, "aa1212",40);
+		Autobus autobus2 = new Autobus("Scania","3000", 2019, 1234, 1234, "Verde", 600, "af2222",60);
 		ase.agregarVehiculo(taxi);
+		ase.agregarVehiculo(taxi1);
+		ase.agregarVehiculo(autobus);
+		ase.agregarVehiculo(autobus1);
+		ase.agregarVehiculo(autobus2);
+		Poliza poliza = new Poliza(taxi, cliente, "11/7/23", "11/7/24", 12, formaDePago.EFECTIVO, 2000000, false, 0, tipoCobertura.TERCEROS, 1200);
+		Poliza poliza1 = new Poliza(autobus, cliente2, "11/7/23", "11/7/24", 3, formaDePago.DEBITO, 5000000, true, 100000, tipoCobertura.TOTAL, 5000);
+		Poliza poliza2 = new Poliza(autobus1, cliente2, "11/7/23", "11/7/24", 6, formaDePago.TRANSFERENCIA, 3500000, false, 0, tipoCobertura.PARCIAL, 3500);
+		Poliza poliza3 = new Poliza(taxi1, cliente, "11/7/23", "11/7/24", 6, formaDePago.EFECTIVO, 2500000, true, 100000, tipoCobertura.PARCIAL, 1500);
+		ase.registrarPoliza(poliza);
+		ase.registrarPoliza(poliza1);
+		ase.registrarPoliza(poliza2);
+		ase.registrarPoliza(poliza3);
 		while (!eleccion.equals("q"))
 			 {
 				mostrarMenu();	
@@ -53,29 +70,26 @@ public class Principal {
 					ase.listarVehiculos();
 					break;
 				case "6":
+					ase.listarVehiculosPor();
 					break;
 				case "7":
 					ase.buscarVehiculoPorMatriculaYMostrar();
 					break;
 				case "8":
-					
+					ase.registrarPoliza();
 					break;
 				case "9":
-					
+					ase.pagarCuota();
 					break;
 				case "10":
-					
+					ase.listarPolizas();
 					break;
 				case "11":
-					
+					ase.buscarPolizaPorVehiculoYMostrar();
 					break;
 				case "12":
-				
-					break;
-				case "13":
-					
-					break;
-					
+					ase.datosEstadisticos();
+					break;	
 				case "q":
 					System.out.println("Saliendo del sistema...");
 					break;

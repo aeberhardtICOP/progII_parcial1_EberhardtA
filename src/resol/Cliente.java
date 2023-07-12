@@ -37,14 +37,20 @@ public class Cliente {
 		scanner.nextLine();
 		this.domicilio=scanner.nextLine();
 		System.out.println("Ingrese telefono");
-		this.scanner.nextInt();
+		this.telefono=scanner.nextInt();
 	}
 	public void mostrar() {
-		System.out.println(this.apellido+" "+this.nombre+", "+this.dni+" "+this.mail+"\n"+this.domicilio+" "+this.telefono);
+		System.out.println("------------------------------------------");
+		System.out.println("APELLIDO: "+this.apellido+", NOMBRE "+this.nombre+"\nDNI"+this.dni+", MAIL: "+this.mail+"\n"+this.domicilio+", TELEFONO: "+this.telefono);
 	}
 	//getters y seters:
 	
-	
+	public String getGenero() {
+		return genero;
+	}
+	public void setGenero(String genero) {
+		this.genero = genero;
+	}
 	public String getNombre() {
 		return nombre;
 	}

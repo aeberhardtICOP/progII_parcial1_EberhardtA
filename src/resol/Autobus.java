@@ -3,15 +3,16 @@ import java.util.Scanner;
 public class Autobus extends Vehiculo {
 	private int nroPlazas;
 
-	public Autobus(String marca, int año, int nro_motor, int nro_chasis, String color, int potenciaCV, String matricula,
+	public Autobus(String marca, String modelo, int año, int nro_motor, int nro_chasis, String color, int potenciaCV, String matricula,
 			int nroPlazas) {
-		super(marca, año, nro_motor, nro_chasis, color, potenciaCV, matricula);
+		super(marca, modelo, año, nro_motor, nro_chasis, color, potenciaCV, matricula);
 		this.nroPlazas = nroPlazas;
 	}
 	Scanner scanner = new Scanner(System.in);
 
 	public Autobus() {
 		super();
+		System.out.println("ingrese plazas");
 		this.nroPlazas = scanner.nextInt();
 	}
 	//getters y setters

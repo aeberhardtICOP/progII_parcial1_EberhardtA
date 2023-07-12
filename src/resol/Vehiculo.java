@@ -2,6 +2,7 @@ package resol;
 import java.util.Scanner;
 public abstract class Vehiculo {
 	private String marca;
+	private String modelo;
 	private int año;
 	private int nro_motor;
 	private int nro_chasis;
@@ -11,9 +12,10 @@ public abstract class Vehiculo {
 	
 	Scanner scanner = new Scanner(System.in);
 	
-	public Vehiculo(String marca, int año, int nro_motor, int nro_chasis, String color, int potenciaCV,
+	public Vehiculo(String marca, String modelo, int año, int nro_motor, int nro_chasis, String color, int potenciaCV,
 			String matricula) {
 		this.marca = marca;
+		this.modelo = modelo;
 		this.año = año;
 		this.nro_motor = nro_motor;
 		this.nro_chasis = nro_chasis;
@@ -26,6 +28,8 @@ public abstract class Vehiculo {
 		System.out.println("NUEVO VEHICULO");
 		System.out.println("Ingrese marca");
 		this.marca=scanner.nextLine();
+		System.out.println("Ingrese modelo");
+		this.modelo=scanner.nextLine();
 		System.out.println("Ingrese año");
 		this.año=scanner.nextInt();
 		System.out.println("Ingrese nro motor");
@@ -38,13 +42,23 @@ public abstract class Vehiculo {
 		System.out.println("Ingrese potencia en CV");
 		this.potenciaCV=scanner.nextInt();
 		System.out.println("Ingrese matricula");
-		this.potenciaCV=scanner.nextInt();
+		scanner.nextLine();
+		this.matricula=scanner.nextLine();
 	}
 	public void mostrar() {
-		System.out.println("MARCA: "+this.marca+", MODELO: "+this.año +" \nNRO MOTOR: "+this.nro_motor+", NRO CHASIS: "+this.nro_chasis+"\nPOTENCIA EN CV: "+this.potenciaCV+", MATRICULA: "+this.matricula);
+		System.out.println("------------------------------------------");
+		System.out.println("MARCA: "+this.marca+", MODELO: "+this.modelo +", AÑO: "+this.año + "\nNRO MOTOR: "+this.nro_motor+", NRO CHASIS: "+this.nro_chasis+"\nPOTENCIA EN CV: "+this.potenciaCV+", MATRICULA: "+this.matricula);
 	}
 	//gettes && setters:
 	
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
 	public String getMarca() {
 		return marca;
 	}

@@ -28,6 +28,13 @@ public class Aseguradora {
 		this.polizas=new ArrayList();
 		this.vehiculos=new ArrayList();
 	}
+//mostrar
+	public void mostrar() {
+		System.out.println("-------------------");
+		System.out.println("ASEGURADORA "+this.nombre);
+		System.out.println("-------------------");
+		System.out.println("DOMICILIO: "+this.domicilio);
+	}
 //agregar persona:
 	public void agregarPersona() {
 		clientes.add(new Cliente());
@@ -107,7 +114,36 @@ public class Aseguradora {
 				}
 			break;
 		case 2:
+			System.out.println("Ingrese filtro: 1)TOTAL, 2)CONTRA TERCEROS, 3)PARCIAL");
+			o=scanner.nextInt();
+			switch(o) {
+			case 1:
+				for(int i=0;i<polizas.size();i++) {
+					if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.TOTAL)) {
+						polizas.get(i).getVehiculo().mostrar();
+					}
+				}
+				break;
+			case 2:
+				for(int i=0;i<polizas.size();i++) {
+					if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.TERCEROS)) {
+						polizas.get(i).getVehiculo().mostrar();
+					}
+				}
+				break;
+			case 3:
+				for(int i=0;i<polizas.size();i++) {
+					if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.PARCIAL)) {
+						polizas.get(i).getVehiculo().mostrar();
+					}
+				}
+				break;
+			default:
+				System.out.println("No ingreso opcion valida.");
+			}
 			break;
+		default:
+			System.out.println("No ingreso opcion valida.");
 		}
 	}
 //buscar vehiculo por matricula
@@ -116,12 +152,11 @@ public class Aseguradora {
 		String matricula = scanner.nextLine();
 		for(int i=0;i<clientes.size();i++) {
 			if(matricula.equals(vehiculos.get(i).getMatricula())) {
-				clientes.get(i).mostrar();
+				vehiculos.get(i).mostrar();
 			}
 		}
 	}
 	public int buscarVehiculoPorMatricula(String matricula) {
-		matricula = scanner.nextLine();
 		for(int i=0;i<clientes.size();i++) {
 			if(matricula.equals(vehiculos.get(i).getMatricula())) {
 				return i;
@@ -145,10 +180,12 @@ public class Aseguradora {
 			cliente=clientes.get(buscarPorDocumento(dni));
 		}
 		System.out.println("Ingrese matricula de vehiculo:");
+		scanner.nextLine();
 		String matri = scanner.nextLine();
 		Vehiculo vehiculo;
 		int indice= buscarVehiculoPorMatricula(matri);
 		if (indice==-1) {
+			System.out.println("NO SE ENCONTRO, A CONTINUACION CARGAR NUEVO");
 			System.out.println("Que desea cargar: 1)Taxi, 2)Autobus");
 			int o=scanner.nextInt();
 			switch(o) {
@@ -159,6 +196,7 @@ public class Aseguradora {
 			case 2: 
 				vehiculo=new Autobus();
 				vehiculos.add(vehiculo);
+				break;
 				default:
 					System.out.println("opcion no valida, por defecto taxi.");
 					vehiculo= new Taxi();
@@ -169,10 +207,142 @@ public class Aseguradora {
 		}
 		Poliza poliza = new Poliza(vehiculo,cliente);
 		polizas.add(poliza);
+	}
+	public void registrarPoliza(Poliza poliza) {
+		polizas.add(poliza);
+	}
+//Buscar poliza
+	public int buscarPolizaPorVehiculo(Vehiculo vehiculo){
+		for(int i=0;i<polizas.size();i++) {
+			if(polizas.get(i).getVehiculo().equals(vehiculo)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	public void buscarPolizaPorVehiculoYMostrar() {
+		System.out.println("Ingrese matricula del vehiculo: ");
+		String matricula = scanner.nextLine();
+		int indiceVehiculo=buscarVehiculoPorMatricula(matricula);
+		polizas.get(buscarPolizaPorVehiculo(vehiculos.get(indiceVehiculo))).mostrar();
+		polizas.get(buscarPolizaPorVehiculo(vehiculos.get(indiceVehiculo))).mostrarCuotas();;
+	}
+//pagar cuota
+	public void pagarCuota() {
+		System.out.println("Ingrese matricula de vehiculo: ");
+		String matri=scanner.nextLine();
+		int indiceVehiculo=buscarVehiculoPorMatricula(matri);
+		if (indiceVehiculo!=-1) {
+			int indicePoliza=buscarPolizaPorVehiculo(vehiculos.get(indiceVehiculo));
+			if (indicePoliza!=-1) {
+				System.out.println("cuotas: ");
+				polizas.get(indicePoliza).mostrarCuotas();
+				int indiceProximaCuota=polizas.get(indicePoliza).siguienteCuotaImpaga();
+				System.out.println("Ingrese forma de pago (1)EFECTIVO, 2)TRANSFERENCIA, 3)DEBITO");
+				int opcion = scanner.nextInt();
+				formaDePago fPago;
+				switch (opcion) {
+				case 1: 
+					fPago=formaDePago.EFECTIVO;
+					break;
+				case 2:
+					fPago=formaDePago.TRANSFERENCIA;
+					break;
+				case 3:
+					fPago=formaDePago.DEBITO;
+					break;
+					default:
+						System.out.println("OPCION INCORRECTA, PREDETERMINADO EFECTIVO");
+						fPago=formaDePago.EFECTIVO;
+				}
+				System.out.println("Ingrese fecha de pago: ");
+				scanner.nextLine();
+				String fecha=scanner.nextLine();
+				polizas.get(indicePoliza).cuotaPagada(indiceProximaCuota, fPago, fecha);
+			}else {
+				System.out.println("No se encontro poliza registrada a ese vhiculo!");
+			}
+		}else {
+			System.out.println("No se encontro vehiculo con esa matricula!!");
+		}
+	}
+//listar cuotas por cobertura
+	public void listarPolizas() {
+		System.out.println("Ingrese filtro: 1)TOTAL, 2)CONTRA TERCEROS, 3)PARCIAL");
+		int o=scanner.nextInt();
+		switch(o) {
+		case 1:
+			for(int i=0;i<polizas.size();i++) {
+				if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.TOTAL)) {
+					polizas.get(i).mostrar();
+				}
+			}
+			break;
+		case 2:
+			for(int i=0;i<polizas.size();i++) {
+				if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.TERCEROS)) {
+					polizas.get(i).mostrar();
+				}
+			}
+			break;
+		case 3:
+			for(int i=0;i<polizas.size();i++) {
+				if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.PARCIAL)) {
+					polizas.get(i).mostrar();
+				}
+			}
+			break;
+		default:
+			System.out.println("No ingreso opcion valida.");
+		}
+	}
+//datos estadisticos
+	public void datosEstadisticos() {
+		mostrar();
+		int totalCL=0;
+		for(int i=0;i<clientes.size();i++) {
+			totalCL=totalCL+1;
+		}
+		int totalVH=0;
+		int totalTAX=0;
+		int totalAUT=0;
+		for(int i=0;i<vehiculos.size();i++) {
+			totalVH=totalVH+1;
+			if(vehiculos.get(i) instanceof Taxi) {
+				totalTAX=totalTAX+1;
+			}else if (vehiculos.get(i) instanceof Autobus) {
+				totalAUT=totalAUT+1;
+			}
+		}
+		int totalPOL = 0;
+		int totalMONTO =0;
+		int totalCUOTAS=0;
+		int totalCPAR=0;
+		int totalCTOT=0;
+		int totalCTER=0;
+		for(int i=0;i<polizas.size();i++) {
+			totalPOL=totalPOL+1;
+			totalMONTO=totalMONTO+polizas.get(i).getMontoTotalAsegurado();
+			totalCUOTAS=totalCUOTAS+polizas.get(i).getCantidadCuotas();
+			if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.PARCIAL)){
+				totalCPAR=totalCPAR+1;
+			}else if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.TOTAL)) {
+				totalCTOT=totalCTOT+1;
+			}else if(polizas.get(i).getTipoCobertura().equals(tipoCobertura.TERCEROS)) {
+				totalCTER=totalCTER+1;
+			}
+		}
+		int promedioMONTO=totalMONTO/totalPOL;
+		int promedioCUOTAS=totalCUOTAS/totalPOL;
+		System.out.println("TOTAL DE CLIENTES: "+totalCL+", TOTAL VEHICULOS: "+totalVH
+				+"\nTAXIS: "+ totalTAX +", AUTOUBUSES: "+totalAUT
+				+"\nTOTAL MONTOS ASEGURADOS: "+totalMONTO+", TOTAL POLIZAS: "+totalPOL
+				+"\nPROMEDIO CUOTAS: "+ promedioCUOTAS+", PROMEDIO MONTO ASEGURADO: "+promedioMONTO
+				+"\nCOBERTURAS: "
+				+"\nPARCIAL: "+totalCPAR+", TOTAL "+totalCTOT+", CONTRA TERCEROS: "+totalCTER);
 		
 	}
-	
-//getters && setters.
+//getters && setters
 	public String getNombre() {
 		return nombre;
 	}
